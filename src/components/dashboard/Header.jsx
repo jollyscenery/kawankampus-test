@@ -3,7 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 
 const TAB_TITLES = {
   home: 'Beranda',
-  communities: 'Circle kampus',
+  communities: 'Lingkungan Aku',
   events: 'Kegiatan',
   connect: 'Teman kampus',
   profile: 'Profil saya',

@@ -1,6 +1,6 @@
 .app-page {
   --dashboard-gutter: clamp(1rem, 3vw, 3.5rem);
-  grid-template-columns: calc(14rem + var(--safe-left)) minmax(0, 1fr);
+  grid-template-columns: calc(15rem + var(--safe-left)) minmax(0, 1fr);
 }
 
 .app-page .sidebar {
@@ -123,7 +123,7 @@
     padding-inline: calc(.5rem + var(--safe-left)) .5rem;
   }
 
-  .app-page .sidebar > .wordmark {
+  .app-page .sidebar-top > .wordmark {
     align-self: center;
     min-inline-size: 2.75rem;
     justify-content: center;
@@ -132,7 +132,7 @@
 
   .app-page .sidebar .wordmark-text { display: none; }
 
-  .app-page .sidebar :is(.side-nav button, .logout) {
+  .app-page .sidebar :is(.side-nav button, .logout, .sidebar-new) {
     flex-direction: column;
     justify-content: center;
     min-inline-size: 2.75rem;
@@ -143,9 +143,21 @@
     font-size: .7rem;
   }
 
-  .app-page .sidebar .logout { inline-size: 100%; }
+  .app-page .sidebar .logout,
+  .app-page .sidebar .sidebar-new { inline-size: 100%; }
+
+  .app-page .sidebar .sidebar-user { flex-direction: column; gap: .25rem; padding: .35rem .2rem; }
+  .app-page .sidebar .sidebar-user .user-details { display: none; }
+  .app-page .sidebar .sidebar-account { flex-direction: column; align-items: stretch; }
+  .app-page .sidebar .sidebar-account .icon-button { inline-size: 100%; }
+
   .app-page .sidebar .inline-error { padding: .35rem; }
   .app-page .sidebar .inline-error p { flex-direction: column; font-size: .76rem; }
+}
+
+/* The sidebar owns the account controls on desktop; the header keeps them on mobile. */
+@media (width >= 768px) {
+  .app-main .app-header .header-actions { display: none; }
 }
 
 @media (width < 768px) {
@@ -173,9 +185,18 @@
     border-block-end: 1px solid var(--border-hairline);
   }
 
-  .app-page .sidebar > .wordmark { margin-inline: 0; }
-  .app-page .sidebar-bottom { min-inline-size: 0; margin-block: 0; }
-  .app-page .sidebar-bottom .logout { margin-inline-start: auto; }
+  .app-page .sidebar-top > .wordmark { margin-inline: 0; }
+  .app-page .sidebar-top { display: flex; align-items: center; min-inline-size: 0; }
+  .app-page .sidebar-bottom {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    min-inline-size: 0;
+    margin-block: 0;
+  }
+  .app-page .sidebar .sidebar-new,
+  .app-page .sidebar .sidebar-account { display: none; }
+  .app-page .sidebar-bottom .logout { width: auto; margin-inline-start: auto; }
   .app-page .sidebar-bottom .inline-error { padding: .35rem; }
   .app-page .sidebar-bottom .inline-error svg { display: none; }
 
@@ -189,9 +210,9 @@
     inset: auto 0 0;
     z-index: 4;
     grid-template-columns: repeat(6, minmax(2.75rem, 1fr));
-    gap: .15rem;
+    gap: .1rem;
     min-height: calc(var(--dashboard-nav-size) + var(--safe-bottom));
-    padding: .36rem max(.5rem, var(--safe-right)) calc(.36rem + var(--safe-bottom)) max(.5rem, var(--safe-left));
+    padding: .36rem max(.4rem, var(--safe-right)) calc(.36rem + var(--safe-bottom)) max(.4rem, var(--safe-left));
     overflow-x: auto;
     scrollbar-width: none;
     background: var(--glass-elevated);
@@ -204,17 +225,22 @@
   .app-page .side-nav button {
     flex-direction: column;
     justify-content: center;
-    gap: .2rem;
+    gap: .16rem;
     min-width: 2.75rem;
     min-height: 2.75rem;
-    padding: .2rem 0;
+    padding: .2rem .1rem;
     text-align: center;
-    font-size: clamp(.62rem, 2.8vw, .75rem);
+    line-height: 1.06;
+    font-size: clamp(.6rem, 2.7vw, .74rem);
+    overflow-wrap: anywhere;
   }
+
+  .app-page .side-nav button span { display: block; max-inline-size: 100%; }
 
   .app-page .side-nav button[aria-current] {
     border-inline-start: 1px solid transparent;
-    border-bottom: 2px solid var(--accent-primary);
+    border-bottom: 2px solid var(--primary);
+    background: var(--teal-tint);
   }
 
   .app-page .side-nav button:focus-visible { outline-offset: -2px; }

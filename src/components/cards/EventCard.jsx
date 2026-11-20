@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight, Check, Clock3, MapPin } from 'lucide-react';
 import { useData } from '../../context/DataContext';
+import { formatEventDate } from '../../utils/events';
 import { InlineError } from '../common/Interface';
 
 export default function EventCard({ event, onAttend }) {
@@ -8,14 +9,7 @@ export default function EventCard({ event, onAttend }) {
   const attending = isEventAttending(event.id);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
-  const dateTime = event.event_date.replace(' ', 'T');
-  const date = new Date(dateTime);
-  const validDate = !Number.isNaN(date.getTime());
-  const day = validDate ? date.toLocaleDateString('id-ID', { day: '2-digit' }) : '–';
-  const month = validDate ? date.toLocaleDateString('id-ID', { month: 'short' }) : '';
-  const schedule = validDate
-    ? date.toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' })
-    : event.event_date;
+  const { date, day, month, schedule } = formatEventDate(event);
 
   const handleAttend = async () => {
     setError('');
@@ -36,7 +30,7 @@ export default function EventCard({ event, onAttend }) {
         <span className="event-community">{event.community_name}</span>
         <h3>{event.title}</h3>
         <p className="event-meta">
-          <span><Clock3 size={15} aria-hidden="true" /><time dateTime={validDate ? dateTime : undefined}>{schedule}</time></span>
+          <span><Clock3 size={15} aria-hidden="true" /><time dateTime={date ? date.toISOString() : undefined}>{schedule}</time></span>
           <span><MapPin size={15} aria-hidden="true" /><span>{event.place}</span></span>
         </p>
         {event.description && <p className="event-description">{event.description}</p>}
@@ -49,7 +43,7 @@ export default function EventCard({ event, onAttend }) {
             {pending ? 'Mendaftar…' : 'Ikut kegiatan'} <ArrowRight size={15} aria-hidden="true" />
           </button>
         )}
-        <small>{event.attendee_count} terdaftar</small>
+        <small>{event.attendee_count ?? 0} terdaftar</small>
       </div>
     </article>
   );

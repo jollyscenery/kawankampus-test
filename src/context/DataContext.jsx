@@ -292,7 +292,7 @@ useEffect(() => {
 
       if (!cancelled) {
         setCommunities([]);
-        message = 'Daftar circle belum bisa dimuat.';
+        message = 'Daftar lingkungan belum bisa dimuat.';
       }
     } finally {
       if (!cancelled) {
@@ -342,7 +342,7 @@ useEffect(() => {
 
       if (!cancelled) {
         setMemberships([]);
-        message = 'Keanggotaan circle belum bisa dimuat.';
+        message = 'Keanggotaan lingkungan belum bisa dimuat.';
       }
     } finally {
       if (!cancelled) {
@@ -371,7 +371,7 @@ useEffect(() => {
       await joinCommunity(existing.id, user);
     } else {
       await createCommunity({
-        name: `Circle ${firstInterest}`,
+        name: `Lingkungan ${firstInterest}`,
         interest_tag: firstInterest,
         description: `Ruang kenalan untuk mahasiswa yang menyukai ${firstInterest}.`
       }, user);
@@ -386,7 +386,7 @@ const createCommunity = async ({ name, interest_tag, description }, user = curre
   }
 
   if (!name?.trim() || !interest_tag?.trim()) {
-    throw new Error('Nama dan minat komunitas wajib diisi.');
+    throw new Error('Nama dan minat lingkungan wajib diisi.');
   }
 
   try {
@@ -441,11 +441,11 @@ const createCommunity = async ({ name, interest_tag, description }, user = curre
       }
     ]);
 
-    showToast('Komunitas berhasil dibuat!');
+    showToast('Lingkungan berhasil dibuat!');
     return newCommunity;
   } catch (error) {
     console.error('Error creating community:', error);
-    showToast('Gagal membuat komunitas.');
+    showToast('Gagal membuat lingkungan.');
     throw error;
   }
 };
@@ -464,7 +464,7 @@ const joinCommunity = async (communityId, user = currentUser) => {
   );
 
   if (alreadyJoined) {
-    showToast('Kamu sudah menjadi anggota komunitas ini.');
+    showToast('Kamu sudah menjadi anggota lingkungan ini.');
     return;
   }
 
@@ -508,10 +508,10 @@ const joinCommunity = async (communityId, user = currentUser) => {
       )
     );
 
-    showToast('Berhasil bergabung ke komunitas!');
+    showToast('Berhasil bergabung ke lingkungan!');
   } catch (error) {
     console.error('Error joining community:', error);
-    showToast('Gagal bergabung ke komunitas.');
+    showToast('Gagal bergabung ke lingkungan.');
     throw error;
   }
 };
@@ -530,7 +530,7 @@ const isCommunityJoined = (communityId) => {
   const createEvent = async ({ title, community_id, event_date, place, description }) => {
     if (!currentUser) throw new Error('Silakan masuk terlebih dahulu.');
     if (!title?.trim() || !event_date || !place?.trim() || !community_id) {
-      throw new Error('Lengkapi judul, komunitas, tanggal, dan lokasi.');
+      throw new Error('Lengkapi judul, lingkungan, tanggal, dan lokasi.');
     }
     if (Number.isNaN(new Date(event_date).getTime())) {
       throw new Error('Tanggal kegiatan tidak valid.');
@@ -538,11 +538,11 @@ const isCommunityJoined = (communityId) => {
     if (!memberships.some((membership) =>
       membership.community_id === String(community_id) && membership.user_id === currentUser.id
     )) {
-      throw new Error('Gabung circle terlebih dahulu untuk membuat kegiatan.');
+      throw new Error('Gabung lingkungan terlebih dahulu untuk membuat kegiatan.');
     }
 
     const comm = communities.find((community) => String(community.id) === String(community_id));
-    if (!comm) throw new Error('Circle tidak ditemukan.');
+    if (!comm) throw new Error('Lingkungan tidak ditemukan.');
 
     const eventRef = doc(collection(db, 'events'));
     const attendanceRef = doc(db, 'eventAttendees', `${eventRef.id}_${currentUser.id}`);

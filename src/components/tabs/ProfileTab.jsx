@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { InlineError } from '../common/Interface';
 import { INTEREST_OPTIONS } from '../../services/mockData';
@@ -77,6 +79,11 @@ export default function ProfileTab() {
             <li className="tag" key={i}>{i}</li>
           ))}
         </ul>
+        {currentUser?.id && (
+          <Link className="action-link profile-preview-link" to={`/profil/${currentUser.id}`}>
+            Lihat tampilan profil publik <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
+        )}
       </section>
 
       <form className="profile-form" onSubmit={handleSubmit}>
@@ -129,6 +136,11 @@ export default function ProfileTab() {
             ))}
           </div>
           {interestError && <InlineError id="profile-interests-error">{interestError}</InlineError>}
+          {legacyInterests.length > 0 && (
+            <p className="field-hint">
+              Minat lama tetap tersimpan: {legacyInterests.join(', ')}. Kamu bisa memilihnya kembali atau menggantinya dengan minat resmi.
+            </p>
+          )}
         </fieldset>
 
         <div className="range-field">

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import EventCard from '../cards/EventCard';
+import { getUpcomingEvents } from '../../utils/events';
 import { EmptyState, InlineError, SearchField, SkeletonList } from '../common/Interface';
 
 export default function EventsTab({ onNavigateTab }) {
@@ -29,7 +30,7 @@ export default function EventsTab({ onNavigateTab }) {
     setError('');
 
     if (!selectedCircle) {
-      setError('Pilih circle terlebih dahulu.');
+      setError('Pilih lingkungan terlebih dahulu.');
       return;
     }
 
@@ -57,7 +58,8 @@ export default function EventsTab({ onNavigateTab }) {
   };
 
   const query = search.trim().toLowerCase();
-  const filtered = events.filter((event) =>
+  const upcoming = getUpcomingEvents(events);
+  const filtered = upcoming.filter((event) =>
     (!onlyAttending || isEventAttending(event.id)) && [event.title, event.community_name, event.place, event.description]
       .some((value) => value?.toLowerCase().includes(query))
   );
@@ -65,7 +67,7 @@ export default function EventsTab({ onNavigateTab }) {
   return (
     <>
       <div className="page-intro">
-        <p>Temukan kegiatan kampus dan ajak circle-mu ketemu langsung.</p>
+        <p>Temukan kegiatan kampus dan ajak lingkunganmu ketemu langsung.</p>
         <button type="button" id="toggle-event-form" className={`btn ${showForm ? 'btn-outline' : 'btn-primary'}`}
           aria-expanded={showForm} aria-controls="create-event" onClick={() => setShowForm(!showForm)}>
           {showForm ? <X size={17} aria-hidden="true" /> : <Plus size={17} aria-hidden="true" />}
@@ -76,18 +78,18 @@ export default function EventsTab({ onNavigateTab }) {
       {showForm && (
         <section className="editor-form" id="create-event" aria-labelledby="create-event-title">
           <h2 id="create-event-title">Kegiatan baru</h2>
-          {communitiesLoading || membershipsLoading ? <SkeletonList type="event" label="Memuat pilihan circle" />
+          {communitiesLoading || membershipsLoading ? <SkeletonList type="event" label="Memuat pilihan lingkungan" />
             : (communitiesError || membershipsError) ? <InlineError onRetry={retryCircles}>{communitiesError || membershipsError}</InlineError>
             : joined.length === 0 ? (
-                <EmptyState type="event" title="Perlu circle untuk membuat kegiatan" action="Cari circle" onAction={() => onNavigateTab('communities')}>
-                  Gabung circle dulu agar kegiatanmu punya tempat di agenda.
+                <EmptyState type="event" title="Perlu lingkungan untuk membuat kegiatan" action="Jelajahi Lingkungan Aku" onAction={() => onNavigateTab('communities')}>
+                  Gabung lingkungan dulu agar kegiatanmu punya tempat di agenda.
                 </EmptyState>
               ) : (
                 <form onSubmit={handleSubmit}>
                   <div className="form-grid">
                     <div><label htmlFor="event-title">Nama kegiatan</label>
                       <input id="event-title" required autoFocus value={title} onChange={(event) => setTitle(event.target.value)} /></div>
-                    <div><label htmlFor="event-circle">Circle</label>
+                    <div><label htmlFor="event-circle">Lingkungan</label>
                       <select id="event-circle" required value={selectedCircle} onChange={(event) => setCommunityId(event.target.value)}>
                         {joined.map((circle) => <option key={circle.id} value={circle.id}>{circle.name}</option>)}
                       </select></div>
@@ -123,15 +125,15 @@ export default function EventsTab({ onNavigateTab }) {
         <div className="event-list">{filtered.map((event) => <EventCard key={event.id} event={event} />)}</div>
       ) : query ? (
         <EmptyState type="search" title="Kegiatan belum ketemu" action="Hapus pencarian" onAction={clearSearch}>
-          Coba nama kegiatan, circle, atau lokasi lain.
+          Coba nama kegiatan, lingkungan, atau lokasi lain.
         </EmptyState>
       ) : onlyAttending ? (
         <EmptyState type="event" title="Kamu belum mendaftar kegiatan" action="Lihat semua agenda" onAction={() => setOnlyAttending(false)}>
           Kalau ada yang menarik, pilih Ikut kegiatan untuk menyimpannya di sini.
         </EmptyState>
       ) : (
-        <EmptyState type="event" title="Belum ada agenda" action={showForm ? undefined : 'Buat kegiatan'} onAction={() => setShowForm(true)}>
-          Bikin rencana pertama bersama circle-mu.
+        <EmptyState type="event" title="Belum ada kegiatan mendatang" action={showForm ? undefined : 'Buat kegiatan'} onAction={() => setShowForm(true)}>
+          Bikin rencana pertama bersama lingkunganmu.
         </EmptyState>
       )}
     </>
