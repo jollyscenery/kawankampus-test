@@ -2,6 +2,26 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
+    <meta name="theme-color" content="#f7faf9" />
+    <script>
+      // Resolve the theme before the first paint so dark mode never flashes light.
+      (function () {
+        try {
+          var stored = localStorage.getItem('kk-theme');
+          var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored === 'light' || stored === 'dark'
+            ? stored
+            : (systemDark ? 'dark' : 'light');
+          var root = document.documentElement;
+          root.dataset.theme = theme;
+          root.style.colorScheme = theme;
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#0b1514' : '#f7faf9');
+        } catch (error) {
+          // Without storage access the CSS light defaults still apply.
+        }
+      })();
+    </script>
     <link rel="icon" type="image/png" href="/logo-kawan-kampus.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Kawan Kampus — Teman, circle, dan kegiatan kampus</title>

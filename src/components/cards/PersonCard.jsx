@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Check, UserRoundPlus } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { useAuth } from '../../context/AuthContext';
@@ -31,7 +32,7 @@ export default function PersonCard({ person }) {
     <article className="person-card">
       <header className="person-heading">
         <span className="person-avatar" aria-hidden="true">{person.name?.charAt(0).toUpperCase() || '?'}</span>
-        <div><h3>{person.name}</h3><p>{person.major || 'Mahasiswa'}</p></div>
+        <div><h3><Link className="card-title-link" to={`/profil/${person.id}`}>{person.name}</Link></h3><p>{person.major || 'Mahasiswa'}</p></div>
       </header>
       <p className="person-bio">{person.bio || 'Belum menambahkan bio.'}</p>
       <ul className="profile-tags" aria-label="Minat">

@@ -11,28 +11,7 @@ export const INTEREST_OPTIONS = [
   { value: 'Olahraga', label: 'Olahraga' },
 ];
 
-// Visitor-only examples, always in sync with the signup interest choices.
-// Signed-in users see Firestore communities instead of these previews.
-const PREVIEW_DESCRIPTIONS = {
-  Teknologi: 'Ngulik aplikasi, AI, dan ide teknologi bareng teman kampus.',
-  Sains: 'Eksperimen ringan, diskusi riset, dan berbagi rasa ingin tahu.',
-  Seni: 'Berbagi karya seni, ilustrasi, dan inspirasi visual.',
-  Kreativitas: 'Brainstorm ide, coba proyek baru, dan kolaborasi kreatif.',
-  Bisnis: 'Bahas ide usaha, strategi bisnis, dan proyek kewirausahaan.',
-  Sosial: 'Kenalan, diskusi isu sosial, dan kegiatan kebersamaan.',
-  Komunikasi: 'Latihan public speaking, storytelling, dan media kampus.',
-  Alam: 'Jelajah ruang hijau, peduli lingkungan, dan kegiatan outdoor.',
-  Kesehatan: 'Berbagi kebiasaan sehat dan dukungan keseharian.',
-  Olahraga: 'Cari teman olahraga, latihan bareng, dan aktivitas aktif.',
-};
-
-export const INITIAL_COMMUNITIES = INTEREST_OPTIONS.map(({ value }, index) => ({
-  id: `preview-${index + 1}`,
-  name: `Circle ${value}`,
-  interest_tag: value,
-  description: PREVIEW_DESCRIPTIONS[value],
-}));
-
+// Preview records were removed: visitors are never shown fabricated data.
 export const INITIAL_EVENTS = [
   {
     id: 1,

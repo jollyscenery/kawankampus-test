@@ -46,7 +46,7 @@ export function EmptyState({ title, children, action, onAction, type = 'circle' 
     <div className="empty-state">
       <Icon size={23} aria-hidden="true" />
       <div><h3>{title}</h3><p>{children}</p></div>
-      {action && <button type="button" className="text-link" onClick={onAction}>
+      {action && <button type="button" className="action-link" onClick={onAction}>
         {action} <ArrowRight size={16} aria-hidden="true" />
       </button>}
     </div>

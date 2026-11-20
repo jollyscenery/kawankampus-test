@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Check, Plus, UserRound } from 'lucide-react';
 import { useData } from '../../context/DataContext';
 import { InlineError } from '../common/Interface';
@@ -15,7 +16,7 @@ export default function CommunityCard({ community, showJoin = true, onJoin }) {
     try {
       await (onJoin || joinCommunity)(community.id);
     } catch (err) {
-      setError(err.code ? 'Belum bisa gabung ke circle ini. Coba lagi.' : err.message);
+      setError(err.code ? 'Belum bisa gabung ke lingkungan ini. Coba lagi.' : err.message);
     } finally {
       setPending(false);
     }
@@ -24,7 +25,7 @@ export default function CommunityCard({ community, showJoin = true, onJoin }) {
   return (
     <article className="community-card">
       {community.interest_tag && <span className="tag">{community.interest_tag}</span>}
-      <h3>{community.name}</h3>
+      <h3><Link className="card-title-link" to={`/lingkungan/${community.id}`}>{community.name}</Link></h3>
       <p>{community.description || 'Ruang untuk kenalan dengan teman satu minat.'}</p>
       <div className="card-foot">
         <span className="member-count">

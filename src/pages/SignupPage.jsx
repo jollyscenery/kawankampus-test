@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff, Sparkles } from 'lucide-react';
 import { InlineError, PublicHeader } from '../components/common/Interface';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
@@ -21,6 +22,7 @@ export default function SignupPage() {
   const [structure, setStructure] = useState(3);
   const [activity, setActivity] = useState(3);
 
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState('');
   const [interestError, setInterestError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -63,7 +65,7 @@ export default function SignupPage() {
         activity
       });
       ensureUserCommunity(newUser).catch(() => {
-        showToast('Akun sudah dibuat. Circle pertama belum bisa disiapkan. Coba gabung lewat halaman Circle.');
+        showToast('Akun sudah dibuat. Lingkungan pertama belum bisa disiapkan. Coba gabung lewat halaman Lingkungan Aku.');
       });
       navigate('/dashboard');
     } catch (err) {
@@ -82,13 +84,18 @@ export default function SignupPage() {
           <p className="kicker">Pendaftaran mahasiswa</p>
           <h1>Bikin profilmu.</h1>
           <p>Ceritakan apa yang kamu suka agar teman dengan minat yang sama bisa menemukanmu.</p>
+          <ul className="auth-points">
+            <li><Sparkles size={16} aria-hidden="true" /> Pilih 2–4 minat resmi Kawan Kampus.</li>
+            <li><Sparkles size={16} aria-hidden="true" /> Profilmu bisa ditemukan mahasiswa lain.</li>
+            <li><Sparkles size={16} aria-hidden="true" /> Gabung lingkungan dan kegiatan kampus.</li>
+          </ul>
         </div>
 
         <form className="auth-card signup-card glass-card" id="signup-form" onSubmit={handleSubmit}>
           <h2>Data akun</h2>
 
           <div className="form-grid">
-            <div>
+            <div className="field">
               <label htmlFor="reg-name">Nama lengkap</label>
               <input
                 id="reg-name"
@@ -102,7 +109,7 @@ export default function SignupPage() {
               />
             </div>
 
-            <div>
+            <div className="field">
               <label htmlFor="reg-nim">NIM</label>
               <input
                 id="reg-nim"
@@ -115,7 +122,7 @@ export default function SignupPage() {
               />
             </div>
 
-            <div>
+            <div className="field">
               <label htmlFor="reg-email">Email</label>
               <input
                 id="reg-email"
@@ -129,7 +136,7 @@ export default function SignupPage() {
               />
             </div>
 
-            <div>
+            <div className="field">
               <label htmlFor="reg-major">Program studi</label>
               <input
                 id="reg-major"
@@ -141,24 +148,31 @@ export default function SignupPage() {
               />
             </div>
 
-            <div className="full">
+            <div className="field full">
               <label htmlFor="reg-password">
                 Kata sandi <small>(minimal 8 karakter)</small>
               </label>
-              <input
-                id="reg-password"
-                name="password"
-                autoComplete="new-password"
-                type="password"
-                minLength={8}
-                required
-                placeholder="Buat kata sandi"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="password-field">
+                <input
+                  id="reg-password"
+                  name="password"
+                  autoComplete="new-password"
+                  type={passwordVisible ? 'text' : 'password'}
+                  minLength={8}
+                  required
+                  placeholder="Buat kata sandi"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button className="icon-button" type="button" aria-controls="reg-password"
+                  aria-label={passwordVisible ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  onClick={() => setPasswordVisible(!passwordVisible)}>
+                  {passwordVisible ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
+                </button>
+              </div>
             </div>
 
-            <div className="full">
+            <div className="field full">
               <label htmlFor="reg-bio">
                 Bio singkat <small>(opsional)</small>
               </label>
@@ -173,6 +187,7 @@ export default function SignupPage() {
             </div>
           </div>
 
+          <h3 className="signup-section-title">Minat</h3>
           <fieldset className="interest-field" aria-describedby={interestError ? 'signup-interests-error' : undefined}>
             <legend>Pilih 2–4 minatmu <small>({selectedInterests.length} dipilih)</small></legend>
             <div className="interest-grid" id="interests">
@@ -191,6 +206,8 @@ export default function SignupPage() {
             </div>
             {interestError && <InlineError id="signup-interests-error">{interestError}</InlineError>}
           </fieldset>
+
+          <h3 className="signup-section-title">Preferensi</h3>
 
           <div className="range-field">
             <label htmlFor="social">
@@ -263,7 +280,7 @@ export default function SignupPage() {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? 'Membuat akun...' : 'Buat akun & temukan circle →'}
+            {isLoading ? 'Membuat akun...' : 'Buat akun & temukan lingkungan →'}
           </button>
 
           {error && <InlineError>{error}</InlineError>}

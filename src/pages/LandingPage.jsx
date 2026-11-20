@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowDown, ArrowRight, ArrowUpRight, MapPin, UsersRound } from 'lucide-react';
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, MapPin, UsersRound } from 'lucide-react';
 import AutoScrollStrip from '../components/common/AutoScrollStrip';
 import { PublicHeader, Wordmark } from '../components/common/Interface';
 import ScrollFade from '../components/common/ScrollFade';
 import LandingAgenda from '../components/landing/LandingAgenda';
-import SubscriptionTiers from '../components/landing/SubscriptionTiers';
 import { useAuth } from '../context/AuthContext';
 import { useData } from '../context/DataContext';
-import { INITIAL_COMMUNITIES } from '../services/mockData';
 
 const gallery = [
   {
@@ -34,6 +32,12 @@ const gallery = [
   },
 ];
 
+const visitorSteps = [
+  'Pilih minat yang paling menggambarkan dirimu.',
+  'Gabung lingkungan yang sesuai dan mulai berkenalan.',
+  'Ikut kegiatan kampus yang sedang berlangsung.',
+];
+
 function scrollToAgenda(event) {
   const agenda = document.getElementById('agenda');
   if (!agenda) return;
@@ -57,14 +61,14 @@ export default function LandingPage() {
   const { isAuthenticated } = useAuth();
   const { communities, communitiesLoading, communitiesError } = useData();
   const destination = isAuthenticated ? '/dashboard' : '/signup';
-  // Visitors see curated examples; signed-in users see the actual Community tab data.
-  const displayedCommunities = isAuthenticated ? communities : INITIAL_COMMUNITIES;
+  // Only real Firestore communities are shown. Visitors get honest guidance,
+  // never fabricated sample records.
+  const displayedCommunities = isAuthenticated ? communities : [];
 
   return (
     <div className="landing" data-reveal-ready={revealReady || undefined}>
       <PublicHeader linkToHome={false}>
         <a className="text-link public-discover" href="#cara-kerja">Jelajah</a>
-        <a className="text-link public-discover" href="#paket">Paket</a>
         {isAuthenticated
           ? <Link className="btn btn-primary" to={destination}>Ke Beranda <ArrowUpRight size={16} aria-hidden="true" /></Link>
           : <>
@@ -78,11 +82,11 @@ export default function LandingPage() {
           <ScrollFade className="hero-copy">
             <h1 id="hero-title">Teman baru.<br /> <em>Cerita baru.</em></h1>
             <p className="hero-description">
-              Dari teman hunting foto sampai kawan belajar. Temukan orang, circle, dan kegiatan yang bikin kamu betah di kampus dan sekitarnya.
+              Dari teman hunting foto sampai kawan belajar. Temukan orang, lingkungan, dan kegiatan yang bikin kamu betah di kampus dan sekitarnya.
             </p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-large" to={destination}>
-                {isAuthenticated ? 'Buka beranda' : 'Temukan circle-mu'} <ArrowRight size={19} aria-hidden="true" />
+                {isAuthenticated ? 'Buka beranda' : 'Jelajahi Lingkungan Aku'} <ArrowRight size={19} aria-hidden="true" />
               </Link>
               <a className="text-link" href="#agenda" onClick={scrollToAgenda}>Lihat kegiatan <ArrowDown size={17} aria-hidden="true" /></a>
             </div>
@@ -110,19 +114,19 @@ export default function LandingPage() {
             <div>
               <h2 id="discovery-title">Selepas kelas, mau ke mana?</h2>
             </div>
-            <p>Jelajahi circle dan agenda kampus, dari halaman fakultas sampai lingkungan sekitar.</p>
+            <p>Jelajahi lingkungan dan agenda kampus, dari halaman fakultas sampai lingkungan sekitar.</p>
           </ScrollFade>
 
           <div className="discovery-board">
             <ScrollFade as="section" className="sample-circles" aria-labelledby="sample-circle-title">
-              <h3 id="sample-circle-title"><UsersRound size={20} aria-hidden="true" /> Circle kampus</h3>
+              <h3 id="sample-circle-title"><UsersRound size={20} aria-hidden="true" /> Lingkungan kampus</h3>
               {isAuthenticated && communitiesLoading ? (
-                <p className="circle-list-state" role="status">Memuat circle kampus…</p>
+                <p className="circle-list-state" role="status">Memuat lingkungan kampus…</p>
               ) : isAuthenticated && communitiesError ? (
                 <p className="circle-list-state" role="alert">{communitiesError}</p>
-              ) : displayedCommunities.length === 0 ? (
-                <p className="circle-list-state">Belum ada circle kampus. Mulai dengan membuat circle pertamamu.</p>
-              ) : (
+              ) : isAuthenticated && displayedCommunities.length === 0 ? (
+                <p className="circle-list-state">Belum ada lingkungan kampus. Mulai dengan membuat lingkungan pertamamu.</p>
+              ) : displayedCommunities.length > 0 ? (
                 <ul id="campus-circles" className="campus-circles-list" aria-labelledby="sample-circle-title" tabIndex={0}>
                   {displayedCommunities.map(({ id, name, interest_tag, description }) => (
                     <li className="circle-preview" key={id}>
@@ -131,9 +135,19 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
+              ) : (
+                <div className="visitor-guide">
+                  <strong>Masuk untuk melihat lingkungan kampus yang nyata.</strong>
+                  <p>Kami tidak menampilkan contoh palsu. Setelah daftar, kamu akan melihat lingkungan yang benar-benar dibuat mahasiswa.</p>
+                  <ul className="visitor-steps">
+                    {visitorSteps.map((step) => (
+                      <li key={step}><Check size={16} aria-hidden="true" /> <span>{step}</span></li>
+                    ))}
+                  </ul>
+                </div>
               )}
               <Link className="text-link" to={destination} state={isAuthenticated ? { dashboardTab: 'communities' } : undefined}>
-                Jelajahi circle <ArrowUpRight size={16} aria-hidden="true" />
+                Jelajahi Lingkungan Aku <ArrowUpRight size={16} aria-hidden="true" />
               </Link>
             </ScrollFade>
             <div className="sample-side">
@@ -142,7 +156,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <SubscriptionTiers />
+        {/* SubscriptionTiers is intentionally not rendered while the pricing
+            presentation is paused. The component is kept for easy restoration. */}
       </main>
 
       <ScrollFade as="footer" className="wrap public-footer">

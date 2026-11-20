@@ -13,8 +13,8 @@ export default function ConnectTab({ onNavigateTab }) {
         : people.length > 0 ? (
             <div className="people-grid">{people.map((person) => <PersonCard key={person.id} person={person} />)}</div>
           ) : (
-            <EmptyState title="Belum ada profil teman" action="Jelajahi circle" onAction={() => onNavigateTab('communities')}>
-              Coba lihat circle yang sesuai minatmu untuk mulai berkenalan.
+            <EmptyState title="Belum ada profil teman" action="Jelajahi Lingkungan Aku" onAction={() => onNavigateTab('communities')}>
+              Coba lihat lingkungan yang sesuai minatmu untuk mulai berkenalan.
             </EmptyState>
           )}
     </>
