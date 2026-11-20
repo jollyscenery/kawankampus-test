@@ -1,0 +1,210 @@
+.public-header > .wordmark,
+.public-header > nav,
+.section-heading > *,
+.discovery-board > *,
+.sample-side > *,
+.agenda-preview li > div,
+.circle-preview > div {
+  min-inline-size: 0;
+}
+
+.public-header nav {
+  justify-content: flex-end;
+}
+
+.public-header nav > .icon-button,
+.public-header nav > a {
+  min-inline-size: 2.75rem;
+}
+
+.campus-gallery-strip,
+.campus-circles-list {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.hero-slide figcaption {
+  inset-inline-end: .75rem;
+  max-inline-size: calc(100% - 1.5rem);
+  overflow-wrap: anywhere;
+}
+
+.circle-preview .tag {
+  max-inline-size: min(40%, 10rem);
+  overflow-wrap: anywhere;
+}
+
+.agenda-preview li {
+  gap: clamp(.5rem, 1.25vw, .8rem);
+}
+
+.public-footer {
+  padding-block-end: var(--safe-bottom, 0px);
+}
+
+.auth-layout {
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+
+.signup-intro {
+  top: calc(6rem + var(--safe-top, 0px));
+}
+
+.auth-card :is(input, textarea, select, button) {
+  scroll-margin-block: .75rem;
+}
+
+.password-field > .icon-button {
+  inset-block: 50% auto;
+  inset-inline-end: 1px;
+  block-size: 2.75rem;
+  translate: 0 -50%;
+}
+
+@media (768px <= width < 1024px) {
+  .hero,
+  .auth-layout,
+  .signup-layout {
+    gap: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .tier-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (width < 768px) {
+  .hero,
+  .auth-layout,
+  .signup-layout,
+  .discovery-board,
+  .tier-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero {
+    gap: clamp(1.25rem, 4vw, 2rem);
+    padding-block: clamp(1.6rem, 6vw, 3rem);
+  }
+
+  .hero h1 {
+    font-size: clamp(2.35rem, 9vw, 4rem);
+    margin-block: .6rem .85rem;
+  }
+
+  .hero-actions {
+    gap: .5rem 1rem;
+    margin-top: 1rem;
+  }
+
+  .hero-actions > a {
+    max-inline-size: 100%;
+  }
+
+  .campus-gallery-strip .auto-scroll-viewport {
+    aspect-ratio: 5 / 3.4;
+  }
+
+  .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .section-heading > p {
+    max-width: 39ch;
+  }
+
+  .auth-layout,
+  .signup-layout {
+    --wrap-limit: 36rem;
+    gap: clamp(1rem, 4vw, 2rem);
+  }
+
+  .auth-photo {
+    order: 1;
+  }
+
+  .auth-photo img {
+    aspect-ratio: 2;
+  }
+
+  .signup-intro {
+    position: static;
+  }
+
+  .signup-intro > p:not(.kicker) {
+    margin-bottom: 0;
+  }
+
+  .auth-card :is(input, textarea, select) {
+    font-size: max(1rem, 16px);
+  }
+}
+
+@media (width < 600px) {
+  .public-header {
+    gap: .5rem;
+  }
+
+  .public-header nav {
+    gap: .3rem;
+  }
+
+  .public-header .public-discover {
+    display: none;
+  }
+
+  .public-header nav > .btn {
+    padding-inline: .65rem;
+  }
+}
+
+@media (width < 380px) {
+  .public-header {
+    gap: .25rem;
+    padding-inline: .5rem;
+  }
+
+  .public-header > .wordmark {
+    gap: .35rem;
+    font-size: .94rem;
+  }
+
+  .public-header nav > .btn svg {
+    display: none;
+  }
+
+  .circle-preview .tag {
+    max-inline-size: 100%;
+  }
+}
+
+@media (width < 360px) {
+  .landing .public-header .wordmark-second {
+    display: block;
+    margin-inline-start: 0;
+  }
+
+  .public-header nav > .btn {
+    padding-inline: .45rem;
+  }
+}
+
+@media (height < 560px) {
+  .auth-layout,
+  .signup-layout {
+    padding-block: 1.25rem;
+  }
+
+  .signup-intro {
+    position: static;
+  }
+}
+
+@media (height < 560px) and (width >= 600px) {
+  .auth-photo img,
+  .campus-gallery-strip .auto-scroll-viewport {
+    aspect-ratio: 16 / 10;
+  }
+}
